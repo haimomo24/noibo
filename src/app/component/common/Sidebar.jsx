@@ -69,6 +69,19 @@ const Sidebar = () => {
           <Link href='/newmail'>Soạn thư</Link>
         </li>
 
+       
+
+
+        <li className="flex text-black items-center space-x-2 px-3 py-2 hover:bg-gray-200 rounded-lg cursor-pointer">
+        <div className="flex items-center space-x-2 mb-2">
+          <MdPerson className="text-2xl text-gray-600" />
+          <span className="font-medium text-gray-800">{username}</span>
+        </div>       
+        </li>
+        <li className="flex text-black items-center space-x-2 px-3 py-2 hover:bg-gray-200 rounded-lg cursor-pointer">
+                     <Link href='/register'>Thêm thành viên </Link>
+        </li>
+
         <li className="flex text-black items-center space-x-2 px-3 py-2 hover:bg-gray-200 rounded-lg cursor-pointer">
           <button
             onClick={handleLogout}
@@ -77,14 +90,6 @@ const Sidebar = () => {
             <MdLogout />
             <span>Đăng xuất</span>
           </button>
-        </li>
-
-
-        <li className="flex text-black items-center space-x-2 px-3 py-2 hover:bg-gray-200 rounded-lg cursor-pointer">
-        <div className="flex items-center space-x-2 mb-2">
-          <MdPerson className="text-2xl text-gray-600" />
-          <span className="font-medium text-gray-800">{username}</span>
-        </div>       
         </li>
       </ul>
     </aside>
