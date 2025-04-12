@@ -1,8 +1,8 @@
 import React from "react";
-import { FaBars } from "react-icons/fa";
-import { FaUser } from "react-icons/fa";
+
+
 import { AiOutlineSearch } from "react-icons/ai";
-import { FiSettings } from "react-icons/fi";
+
 import Link from "next/link";
 
 const Header = () => {
