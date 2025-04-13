@@ -10,6 +10,7 @@ const MainContent = () => {
   const [mails, setMails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [expandedDescriptions, setExpandedDescriptions] = useState({});
 
   useEffect(() => {
     // Kiểm tra trạng thái đăng nhập
@@ -61,6 +62,13 @@ const MainContent = () => {
     }
   };
 
+  const toggleDescription = (mailId) => {
+    setExpandedDescriptions(prev => ({
+      ...prev,
+      [mailId]: !prev[mailId]
+    }));
+  };
+
   const totalPages = Math.ceil(mails.length / itemsPerPage);
   const paginatedMails = mails.slice(
     (currentPage - 1) * itemsPerPage,
@@ -89,14 +97,14 @@ const MainContent = () => {
           {paginatedMails.map((mail, index) => (
             <div
               key={mail.id}
-              className="flex items-start gap-4 px-4 py-4 mb-2 bg-white rounded-lg shadow hover:shadow-md transition-shadow duration-200 hover:bg-gray-100"
+              className="flex items-start gap-4 px-4 py-4 mb-2 bg-white rounded-lg shadow hover:shadow-md transition-shadow duration-200 hover:bg-lime-100"
             >
               <input type="checkbox" className="mt-1" />
               <AiOutlineStar className="text-gray-400 hover:text-yellow-500 mt-1 cursor-pointer" />
               <div className="flex flex-col w-full">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-gray-800 truncate">{mail.name}</span>
+                    <span className="font-semibold text-red-700 truncate">{mail.name}</span>
                     {index < 4 && (
                       <span className="animate-pulse bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
                         NEW
@@ -116,12 +124,27 @@ const MainContent = () => {
                     )}
                   </div>
                 </div>
-                <div className="text-gray-700 font-medium truncate">{mail.title}</div>
-                <div className="text-sm text-gray-500 truncate">{mail.description}</div>
+                <div className="text-black font-medium truncate">{mail.title}</div>
+                
+                {/* Phần description với khả năng mở rộng */}
+                <div className="text-sm text-gray-500">
+                  <div className={expandedDescriptions[mail.id] ? "whitespace-normal break-words" : "line-clamp-2"}>
+                    {mail.description}
+                  </div>
+                  {mail.description && mail.description.length > 100 && (
+                    <button 
+                      onClick={() => toggleDescription(mail.id)} 
+                      className="text-blue-500 hover:text-blue-700 text-xs mt-1"
+                    >
+                      {expandedDescriptions[mail.id] ? "Thu gọn" : "Xem thêm"}
+                    </button>
+                  )}
+                </div>
+                
                 {mail.file_path && (
                   <div className="flex items-center mt-2 text-blue-600 hover:text-blue-800">
                     <AiOutlineDownload className="mr-1" />
-                    <a href={mail.file_path} download className="text-sm">
+                    <a href={mail.file_path} download className="text-sm text-[18px]">
                       Tải file đính kèm
                     </a>
                   </div>
