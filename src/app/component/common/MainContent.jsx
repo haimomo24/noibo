@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { AiOutlineStar, AiOutlineDownload } from 'react-icons/ai';
+import { AiOutlineStar, AiOutlineDownload, AiOutlineDelete } from 'react-icons/ai';
 
 const itemsPerPage = 6;
 
@@ -9,8 +9,14 @@ const MainContent = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [mails, setMails] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    // Kiểm tra trạng thái đăng nhập
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      setIsLoggedIn(true);
+    }
     fetchMails();
   }, []);
 
@@ -25,6 +31,33 @@ const MainContent = () => {
       console.error('Error fetching mails:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteMail = async (mailId) => {
+    if (window.confirm('Bạn có chắc chắn muốn xóa thư này không?')) {
+      try {
+        const res = await fetch(`/api/mail/${mailId}`, {
+          method: 'DELETE',
+        });
+        
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        const data = await res.json();
+        
+        if (data.success) {
+          // Actualizar la lista de correos después de eliminar
+          setMails(prevMails => prevMails.filter(mail => mail.id !== mailId));
+          alert('Xóa thư thành công!');
+        } else {
+          alert('Không thể xóa thư: ' + data.message);
+        }
+      } catch (error) {
+        console.error('Error deleting mail:', error);
+        alert('Đã xảy ra lỗi khi xóa thư: ' + error.message);
+      }
     }
   };
 
@@ -70,7 +103,18 @@ const MainContent = () => {
                       </span>
                     )}
                   </div>
-                  <span className="text-sm text-gray-500">{formatDate(mail.created_date)}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500">{formatDate(mail.created_date)}</span>
+                    {isLoggedIn && (
+                      <button 
+                        onClick={() => handleDeleteMail(mail.id)}
+                        className="text-red-500 hover:text-red-700 transition-colors"
+                        title="Xóa thư"
+                      >
+                        <AiOutlineDelete size={18} />
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <div className="text-gray-700 font-medium truncate">{mail.title}</div>
                 <div className="text-sm text-gray-500 truncate">{mail.description}</div>
@@ -96,12 +140,12 @@ const MainContent = () => {
             </button>
 
             <span className="text-sm text-black">
-              Trang {currentPage} / {totalPages}
+              Trang {currentPage} / {totalPages || 1}
             </span>
 
             <button
               onClick={handleNext}
-              disabled={currentPage === totalPages}
+              disabled={currentPage === totalPages || totalPages === 0}
               className="px-4 py-2 text-black rounded-lg bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
             >
               Trang sau
