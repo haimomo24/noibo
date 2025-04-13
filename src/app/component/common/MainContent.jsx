@@ -11,6 +11,7 @@ const MainContent = () => {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [expandedDescriptions, setExpandedDescriptions] = useState({});
+  const [downloadStatus, setDownloadStatus] = useState({});
 
   useEffect(() => {
     // Kiểm tra trạng thái đăng nhập
@@ -68,6 +69,74 @@ const MainContent = () => {
       [mailId]: !prev[mailId]
     }));
   };
+
+  // Hàm xử lý tải file đính kèm
+  // Hàm xử lý tải file đính kèm
+const handleDownload = async (mailId, filePath) => {
+  try {
+    setDownloadStatus(prev => ({ ...prev, [mailId]: 'downloading' }));
+    
+    // Kiểm tra xem filePath có tồn tại không
+    if (!filePath) {
+      throw new Error('Đường dẫn file không tồn tại');
+    }
+
+    // Lấy tên file từ đường dẫn để hiển thị
+    const fileName = filePath.split('/').pop();
+    
+    // Tạo API endpoint để tải file
+    const response = await fetch(`/api/download?path=${encodeURIComponent(filePath)}`);
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Không thể tải file');
+    }
+    
+    // Lấy blob từ response
+    const blob = await response.blob();
+    
+    // Tạo URL cho blob
+    const url = window.URL.createObjectURL(blob);
+    
+    // Tạo thẻ a tạm thời để tải file
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = fileName;
+    
+    // Thêm vào body, click để tải, và xóa
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    
+    setDownloadStatus(prev => ({ ...prev, [mailId]: 'success' }));
+    
+    // Xóa trạng thái thành công sau 3 giây
+    setTimeout(() => {
+      setDownloadStatus(prev => {
+        const newStatus = { ...prev };
+        delete newStatus[mailId];
+        return newStatus;
+      });
+    }, 3000);
+    
+  } catch (error) {
+    console.error('Error downloading file:', error);
+    setDownloadStatus(prev => ({ ...prev, [mailId]: 'error' }));
+    alert('Lỗi khi tải file: ' + error.message);
+    
+    // Xóa trạng thái lỗi sau 3 giây
+    setTimeout(() => {
+      setDownloadStatus(prev => {
+        const newStatus = { ...prev };
+        delete newStatus[mailId];
+        return newStatus;
+      });
+    }, 3000);
+  }
+};
+
 
   const totalPages = Math.ceil(mails.length / itemsPerPage);
   const paginatedMails = mails.slice(
@@ -142,11 +211,22 @@ const MainContent = () => {
                 </div>
                 
                 {mail.file_path && (
-                  <div className="flex items-center mt-2 text-blue-600 hover:text-blue-800">
-                    <AiOutlineDownload className="mr-1" />
-                    <a href={mail.file_path} download className="text-sm text-[18px]">
-                      Tải file đính kèm
-                    </a>
+                  <div className="flex items-center mt-2">
+                    <button 
+                      onClick={() => handleDownload(mail.id, mail.file_path)}
+                      className={`flex items-center text-sm text-[18px] ${
+                        downloadStatus[mail.id] === 'error' 
+                          ? 'text-red-600 hover:text-red-800' 
+                          : 'text-blue-600 hover:text-blue-800'
+                      } transition-colors duration-300`}
+                      disabled={downloadStatus[mail.id] === 'downloading'}
+                    >
+                      <AiOutlineDownload className="mr-1" />
+                      {downloadStatus[mail.id] === 'downloading' && 'Đang tải...'}
+                      {downloadStatus[mail.id] === 'success' && 'Tải thành công!'}
+                      {downloadStatus[mail.id] === 'error' && 'Tải thất bại, thử lại'}
+                      {!downloadStatus[mail.id] && 'Tải file đính kèm'}
+                    </button>
                   </div>
                 )}
               </div>
