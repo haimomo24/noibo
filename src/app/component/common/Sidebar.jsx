@@ -99,7 +99,7 @@ const Sidebar = () => {
           </>
         ) : (
           <li className="flex text-black items-center space-x-2 px-3 py-2 hover:bg-gray-200 rounded-lg cursor-pointer">
-            <Link href="/" className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 w-full">
+            <Link href="/login" className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 w-full">
               <MdLogin />
               <span>Đăng nhập</span>
             </Link>
