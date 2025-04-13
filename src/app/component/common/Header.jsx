@@ -11,7 +11,7 @@ const Header = () => {
       {/* Menu Icon + Logo */}
       <div className="flex items-center space-x-3">
        <Link href='/homepage'><img
-          src="/images/logo chua-01.png"
+          src="/images/logo.jpg"
           alt="Gmail Logo"
           className="h-7"
         /></Link>
