@@ -17,7 +17,7 @@ const Footer = () => {
       link: "https://zalo.me/0966763701" // Thay bằng link Zalo thực tế
     },
     phone: {
-      title: "Điện thoại nội bộbộ",
+      title: "Điện thoại nội bộ",
       number: "666", // Thay bằng số điện thoại thực tế
       link: "tel:666"
     },
@@ -40,11 +40,11 @@ const Footer = () => {
     <footer className="footer p-10 bg-gradient-to-r from-blue-50 to-indigo-50 text-gray-800 shadow-inner">
       <div className="flex flex-col">
         <nav className="grid grid-flow-row gap-2">
-          <a className="link link-hover font-medium hover:text-blue-600 transition-colors duration-300">Tràng An Group <span className="text-indigo-600 italic">Di sản dẫn lối tương lai</span> </a>
+          <a className="link link-hover font-medium hover:text-blue-600 transition-colors duration-300">Tràng An Group    ©   <span className="text-indigo-400 ">Di sản dẫn lối tương lai</span> </a>
           
         </nav>
         <aside className="mt-4">
-          <p className="font-medium text-gray-700">IT  Tràng An Group  ©   </p>
+          <p className="font-medium text-gray-700">IT  Tràng An Group </p>
         </aside>
       </div>
       

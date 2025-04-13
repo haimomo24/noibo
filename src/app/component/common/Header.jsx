@@ -20,17 +20,7 @@ const Header = () => {
 
       {/* Search Box */}
       <div className="flex flex-grow justify-end">
-  <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-full max-w-xl">
-    <AiOutlineSearch className="text-gray-500 text-xl mr-2" />
-    <input
-      type="text"
-      placeholder="Tìm kiếm trong thư"
-      className="bg-transparent outline-none text-black flex-grow text-sm"
-    />
-    {/* Nút đăng nhập */}
-    
-    
-  </div>
+  
 </div>
     </header>
   );
