@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "./component/common/Header";
+import Footer from "./component/common/Footer";
 
 
 const geistSans = Geist({
@@ -39,9 +40,7 @@ export default function RootLayout({ children }) {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-50 text-white p-4 text-center">
-        Footer © 2025
-      </footer>
+      <Footer/>
          
 
          
